@@ -12,14 +12,12 @@ class perceptron{
         std::vector<std::vector<float>> trainingData;
         double threshold;
         std::vector<float> weights;
-public:
-    const std::vector<float> &getWeights() const;
 
 public:
     perceptron(std::vector<std::vector<float>> trainingData);
     void trainPerceptron(int iterations, float learningRate);
-    int compute(float in1, float in2);
-
+    int activationFunctionStep(float x1, float x2);
+    const std::vector<float> &getWeights() const;
 
 
 };

@@ -7,17 +7,52 @@
 #include <string>
 #include <sstream>
 
-//#include <experimental/filesystem>
-
-//namespace  fs = std::experimental::filesystem;
-
 #include "perceptron.h"
 
-perceptron doTraining(std::string name, int iterations, float learningRate);
+perceptron doTraining(const std::string& name, int iterations, float learningRate);
+std::vector<std::vector<float>> getTrainingData(const std::string& fileName);
+int XORComputation(float x1,float x2, perceptron AND,perceptron OR ,perceptron NAND);
 
-std::vector<std::vector<float>> getTrainingData(std::string fileName) {
+int main(){
+
+    perceptron AND = doTraining("AND", 1000, 0.1);
+    perceptron NAND = doTraining("NAND", 1000, 0.1);
+    perceptron OR = doTraining("OR", 1000, 0.1);
+
+    float x1, x2;
+    while (true){
+        std::cout<<"Enter x1 and x2:"<<std::endl;
+        std::cin >> x1;
+        std::cin >> x2;
+        std::cout << XORComputation(x1,x2, AND,OR ,NAND) << std::endl;
+        char answer;
+        std::cout << "Test again?(y/n) ";
+        std::cin >> answer;
+        if (answer == 'n' || answer == 'N') {
+            break;
+        }
+    }
+    return 0;
+}
+
+perceptron doTraining(const std::string& name, int iterations, float learningRate) {
+    std::string header = "trainingData/"+name + ".txt";
+
+    perceptron perceptron(getTrainingData(header));
+
+    std::cout << std::endl << name << std::endl;
+
+    perceptron.trainPerceptron(iterations, learningRate);
+
+    std::cout << "W1: " << perceptron.getWeights()[0] << std::endl;
+    std::cout << "W2: " << perceptron.getWeights()[1] << std::endl;
+    std::cout << "W3: " << perceptron.getWeights()[2] << std::endl;
+
+    return perceptron;
+}
+
+std::vector<std::vector<float>> getTrainingData(const std::string& fileName) {
     std::ifstream infile(fileName);
-   // std::cout << fs::current_path().string() << std::endl;
     std::vector<std::vector<float>> trainingData;
     if (infile.is_open()) {
         std::string line;
@@ -39,22 +74,11 @@ std::vector<std::vector<float>> getTrainingData(std::string fileName) {
     return trainingData;
 }
 
-int main(){
+int XORComputation(float x1, float x2, perceptron AND, perceptron OR, perceptron NAND) {
+    int outputNAND = NAND.activationFunctionStep(x1,x2);
+    int outputOR = OR.activationFunctionStep(x1,x2);
 
-    perceptron AND = doTraining("AND", 1000, 0.1);
-    perceptron NAND = doTraining("NAND", 1000, 0.1);
-    perceptron OR = doTraining("OR", 1000, 0.1);
-    return 0;
-}
+    int outputAND = AND.activationFunctionStep(outputNAND,outputOR);
 
-perceptron doTraining(std::string name, int iterations, float learningRate) {
-    std::string header = "trainingData/"+name + ".txt";
-    perceptron perceptron(getTrainingData(header));
-    std::cout << std::endl << name << std::endl;
-//    perceptron.trainPerceptron(iterations, learningRate);
-    std::cout << "W1: " << perceptron.getWeights()[0] << std::endl;
-    std::cout << "W2: " << perceptron.getWeights()[1] << std::endl;
-    std::cout << "W3: " << perceptron.getWeights()[2] << std::endl;
-
-    return perceptron;
+    return outputAND;
 }
