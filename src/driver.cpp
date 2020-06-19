@@ -34,7 +34,7 @@ int main(){
     }
     return 0;
 }
-
+// training function for the preceptron
 perceptron doTraining(const std::string& name, int iterations, float learningRate) {
     std::string header = "trainingData/"+name + ".txt";
 
@@ -50,7 +50,7 @@ perceptron doTraining(const std::string& name, int iterations, float learningRat
 
     return perceptron;
 }
-
+// reads in the training data
 std::vector<std::vector<float>> getTrainingData(const std::string& fileName) {
     std::ifstream infile(fileName);
     std::vector<std::vector<float>> trainingData;

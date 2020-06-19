@@ -4,14 +4,14 @@
 
 #include <iostream>
 #include "perceptron.h"
-
+// constructor for my perceptron
 perceptron::perceptron(std::vector<std::vector<float>> trainingData)  : threshold(1), weights(3, 0.0F) {
     this->trainingData.resize(trainingData.size());
     for (int i = 0; i < trainingData.size(); ++i) {
         this->trainingData[i] = std::move(trainingData[i]);
     }
 }
-
+//trains the proceptron with the training data
 void perceptron::trainPerceptron(int iterations, float learningRate) {
     for (int i = 0; i < iterations; ++i) {
         int errors=0;
@@ -42,12 +42,12 @@ void perceptron::trainPerceptron(int iterations, float learningRate) {
     }
 
 }
-
+//activation function
 int perceptron::activationFunctionStep(float x1, float x2) {
     float  valueSum = x1*weights[0]+ x2*weights[1]+weights[2];
     return (valueSum> threshold)?1:0 ;
 }
-
+// getter for my weights so i didnt make them public
 const std::vector<float> &perceptron::getWeights() const {
     return weights;
 }
